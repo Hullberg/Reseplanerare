@@ -1,42 +1,89 @@
 // Hejsan hoppsan. Välkommen till sprint 2. Jobba med Axel, Kom igen, det blir kul. 
 // Helvete Johan
-
 // Jag tyckte det var kul
 
 #include <stdlib.h>
 #include <stdio.h>
 
 
-#include "readToBuffer.h"
+#include "readline.h"
 
 typedef struct edge *Edge;
 typedef struct node *Node;
 
-struct edge {
-  unsigned short bus_line;
-  char* travel_from;
-  char* travel_to;
-  unsigned short travel_time;
-  Node* prev_node;
-  Node* next_node;
-  Edge* connected_nodes_edges;
-};
+char buffer[128];
 
+struct edge {
+  unsigned short bus_line;    //info
+  char* travel_from;          //info
+  char* travel_to;            //info
+  unsigned short travel_time; //info
+  Node* prev_node;            //metadata
+  Node* next_node;            //metadata
+};
 
 
 struct node {
-  unsigned short bus_line;
-  char* bus_stop;
-  unsigned short start_time;
-  Edge* adjacent_edges;
-  Node* next_node;
+  unsigned short bus_line;    //info
+  char* bus_stop;             //info
+  unsigned short start_time;  //info
+  Edge* adjacent_edges;       //metadata
+  Node* next_node;            //metadata
 };
 
 
+char* splitLine (char* a_line){
+  char* split_string = strtok(a_line, ",");
+  while (split_string != NULL) {
+    
+  }
+}
 
 
 
-int welcomescreen(void){
+
+/*
+
+char* splitline(char *dest, int n, FILE *source){
+  char* string = readline(dest, n, source);
+  char* comma = strchr(string, ',');
+  while (comma != NULL) comma = '\0';
+  return string;
+}
+*/
+
+
+
+Node makeNode(char* string) {
+  Node new_node = NULL;
+  char* split_string = strtok(string, ",");
+  while (split_string != NULL) {
+    
+    
+  }
+}
+
+Edge makeEdge() {
+  
+}
+
+
+void makeGraph(char* filename) {
+  FILE* database = fopen(filename, "r");
+  Node new_node = malloc(sizeof(struct node));
+  Edge new_edge = malloc(sizeof(struct edge));
+}
+
+
+
+
+
+
+
+
+
+
+int welcomeScreen(void){
   puts("\n Welcome to travelplanner!");
   puts("       ____________");
   puts("      // PARTYBUS \\\\ ");
@@ -50,9 +97,7 @@ int welcomescreen(void){
 
 
 int main(void){
-  
-
-  welcomescreen();
+  welcomeScreen();
   return 0;
 }
 
