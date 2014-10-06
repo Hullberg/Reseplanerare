@@ -13,75 +13,125 @@ typedef struct node *Node;
 
 char buffer[128];
 
+
 struct edge {
-  unsigned short bus_line;    //info
+  char* bus_line;             
+  struct node* travel_from;   
+  struct node* travel_to;     
+  char* travel_time;          
+  struct edge* next_node;
+} ;
+
+struct node {
+  char* bus_line;
+  struct edge* route;
+  struct node* next;
+} ;
+
+
+
+/*
+
+struct edge {
+   bus_line;    //info
   char* travel_from;          //info
   char* travel_to;            //info
-  unsigned short travel_time; //info
+  int travel_time; //info
   Node* prev_node;            //metadata
   Node* next_node;            //metadata
 };
 
 
 struct node {
-  unsigned short bus_line;    //info
+  int bus_line;    //info
   char* bus_stop;             //info
-  unsigned short start_time;  //info
+  int start_time;  //info
   Edge* adjacent_edges;       //metadata
   Node* next_node;            //metadata
 };
 
 
-char* splitLine (char* a_line){
-  char* split_string = strtok(a_line, ",");
-  while (split_string != NULL) {
-    
+void partitionLine(char* string) {
+  char delim[2] = ","; 
+  char* split_string;
+  split_string = strtok(string, delim);
+  while (split_string != NULL){
+    if (split_string[0] == 32) {
+      split_string = split_string + 1;
+    }else{    
+      printf("%s\n", split_string);
+      split_string = strtok(NULL, delim);
+    } 
   }
-}
-
-
-
-
-/*
-
-char* splitline(char *dest, int n, FILE *source){
-  char* string = readline(dest, n, source);
-  char* comma = strchr(string, ',');
-  while (comma != NULL) comma = '\0';
-  return string;
 }
 */
 
 
 
-Node makeNode(char* string) {
-  Node new_node = NULL;
-  char* split_string = strtok(string, ",");
-  while (split_string != NULL) {
-    
-    
+
+char* getSpecificInfo(char* string, char* str){
+   char delim[2] = ",";
+   if((string[0] == 32)){
+    string = string + 1;
+    str = string;
+    string = strtok(NULL, delim);    
+  }else{
+    str = string;
+    string = strtok(NULL, delim);    
   }
-}
-
-Edge makeEdge() {
-  
+   return str;
 }
 
 
-void makeGraph(char* filename) {
+Edge makeElementEdge (char* string, int information) {
+  Edge new_edge = NULL;
+  char* str = NULL;
+  switch (information) {
+  case 1:
+    atoi(getSpecificInfo(string, str));
+    new_edge->bus_line = atoi(str);
+    break;
+  case 2:
+    getSpecificInfo(string, str);  
+    new_edge->travel_from = str;
+    break;
+  case 3:
+    getSpecificInfo(string, str);   
+    new_edge->travel_to = str;
+    break;
+  case 4:
+    atoi(getSpecificInfo(string, str));   
+    new_edge->travel_time = atoi(str);
+    break;  
+  default:
+    puts("FUck you");
+  } 
+  return new_edge;
+}
+
+
+char* getInfo(char* filename){
   FILE* database = fopen(filename, "r");
-  Node new_node = malloc(sizeof(struct node));
-  Edge new_edge = malloc(sizeof(struct edge));
+  char* string = fgets(buffer, 128, database);
+  return string;
 }
 
+Edge makeEdge (char* filename){
+  Edge new_edge = NULL;
+  char delim[2] = ","; 
+  char* string = getInfo(filename);
+  char* split_string = strtok(string, delim);
+  while (split_string != NULL){
+    makeElementEdge(split_string, 1);
+    makeElementEdge(split_string, 2);
+    makeElementEdge(split_string, 3);
+    makeElementEdge(split_string, 4);
+ }
+  printf("%d\t%s\t%s\t%d\n", new_edge->bus_line, new_edge->travel_from, new_edge->travel_to, new_edge->travel_time);
+  return new_edge;
+}
 
-
-
-
-
-
-
-
+/*
 
 int welcomeScreen(void){
   puts("\n Welcome to travelplanner!");
@@ -94,10 +144,13 @@ int welcomeScreen(void){
   puts(" Loading timetables\n");
   return 0;
 }
+*/
+
+int main(int argc, char* argv[]){
+  char* test = argv[1];
+  makeEdge(test);
 
 
-int main(void){
-  welcomeScreen();
   return 0;
 }
 
@@ -106,6 +159,53 @@ int main(void){
 
 
 
+
+
+/*
+Edge makeEdge (char* string) {
+  char delim[2] = ","; 
+  char* split_string;
+  split_string = strtok(string, delim);
+  while (split_string != NULL){
+    if (split_string[0] == 32) {
+      split_string = split_string + 1;
+      split_string = strtok(NULL, delim);
+    }else{    
+      split_string = strtok(NULL, delim); 
+    } 
+  }
+  return split_string;
+}
+
+
+
+void getInfo(char* filename){
+  // Node new_node = NULL;
+  FILE* database = fopen(filename, "r");
+  char* string = fgets(buffer, 128, database);
+  partitionLine(string);
+  char* a_piece_of_info = NULL;
+  while (strchr(string, atoi("\n")) != NULL){
+    for (int i = 0; string[i] != atoi("\n"); i++) {
+      strcpy(a_piece_of_info, string);
+    }
+  }
+  printf("%s/n", string);
+}
+
+
+
+
+Edge makeEdge() {
+  
+}
+void makeGraph(char* filename) {
+  FILE* database = fopen(filename, "r");
+  Node new_node = malloc(sizeof(struct node));
+  Edge new_edge = malloc(sizeof(struct edge));
+}
+
+*/
 
 
 

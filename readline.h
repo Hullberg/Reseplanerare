@@ -6,6 +6,5 @@
 
 void readline(char*, int, FILE*);
 
-void partitionLine (char*);
 
 #endif
