@@ -1,5 +1,3 @@
-
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -35,25 +33,32 @@ char* removeSpace(char* string){
    return string;
 }
 
+// Eftersom vi kör makeEdgeElements 4 ggr så mallocar vi 24 saker... Frigör efter varje gång?
 Edge makeEdgeElements(Edge new_edge, char* string, int i){
   switch (i){
   case 0:
     new_edge->bus_line = malloc(strlen(buffer) + 1);
     strcpy(new_edge->bus_line, removeSpace(string));
+    free(new_edge->bus_line); //Freeee falling
     break;
   case 1:
     new_edge->travel_from = malloc(sizeof(struct node));
     new_edge->travel_from->name = malloc(strlen(buffer) + 1);
     strcpy(new_edge->travel_from->name, removeSpace(string));
+    free(new_edge->travel_from); // Frigör, men hjälper inte
+    free(new_edge->travel_from->name);
     break;
   case 2:
     new_edge->travel_to = malloc(sizeof(struct node));
     new_edge->travel_to->name = malloc(strlen(buffer) + 1);
     strcpy(new_edge->travel_to->name, removeSpace(string));
+    free(new_edge->travel_to); // Det fungerar inte Axel
+    free(new_edge->travel_to->name);
     break;
   case 3: 
     new_edge->travel_time = malloc(strlen(buffer) + 1);
     strcpy(new_edge->travel_time, removeSpace(string));
+    free(new_edge->travel_time); // Tycker inte om det här!
     break;
   }
   return new_edge;
