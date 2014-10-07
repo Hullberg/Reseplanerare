@@ -71,7 +71,7 @@ void partitionLine(char* string) {
 
 char* getSpecificInfo(char* string, char* str){
    char delim[2] = ",";
-   if((string[0] == 32)){
+   if(string[0] = 32){
     string = string + 1;
     str = string;
     string = strtok(NULL, delim);    
