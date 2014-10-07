@@ -28,16 +28,6 @@ typedef struct node {
 } *Node;
 
 
-
-char* getSpecificInfo(char* string, char* str){
-   char delim[2] = ",";
-   if(string[0] = 32){
-    string = string + 1;
-    str = string;
-    string = strtok(NULL, delim);    
-  }else{
-    str = string;
-    string = strtok(NULL, delim);    
 char* removeSpace(char* string){
    if(string[0] == 32){
      string = string + 1;
