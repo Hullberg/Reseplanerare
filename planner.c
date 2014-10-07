@@ -1,71 +1,31 @@
-// Hejsan hoppsan. Välkommen till sprint 2. Jobba med Axel, Kom igen, det blir kul. 
-// Helvete Johan
-// Jag tyckte det var kul
+
 
 #include <stdlib.h>
 #include <stdio.h>
-
+#include <string.h>
 
 #include "readline.h"
 
-typedef struct edge *Edge;
-typedef struct node *Node;
+struct edge;
+struct node;
 
 char buffer[128];
 
 
-struct edge {
+typedef struct edge {
   char* bus_line;             
   struct node* travel_from;   
   struct node* travel_to;     
   char* travel_time;          
   struct edge* next_node;
-} ;
+} *Edge;
 
-struct node {
+typedef struct node {
+  char* name;
   char* bus_line;
   struct edge* route;
   struct node* next;
-} ;
-
-
-
-/*
-
-struct edge {
-   bus_line;    //info
-  char* travel_from;          //info
-  char* travel_to;            //info
-  int travel_time; //info
-  Node* prev_node;            //metadata
-  Node* next_node;            //metadata
-};
-
-
-struct node {
-  int bus_line;    //info
-  char* bus_stop;             //info
-  int start_time;  //info
-  Edge* adjacent_edges;       //metadata
-  Node* next_node;            //metadata
-};
-
-
-void partitionLine(char* string) {
-  char delim[2] = ","; 
-  char* split_string;
-  split_string = strtok(string, delim);
-  while (split_string != NULL){
-    if (split_string[0] == 32) {
-      split_string = split_string + 1;
-    }else{    
-      printf("%s\n", split_string);
-      split_string = strtok(NULL, delim);
-    } 
-  }
-}
-*/
-
+} *Node;
 
 
 
@@ -78,36 +38,47 @@ char* getSpecificInfo(char* string, char* str){
   }else{
     str = string;
     string = strtok(NULL, delim);    
+char* removeSpace(char* string){
+   if(string[0] == 32){
+     string = string + 1;
   }
-   return str;
+   return string;
 }
 
-
-Edge makeElementEdge (char* string, int information) {
-  Edge new_edge = NULL;
-  char* str = NULL;
-  switch (information) {
+Edge makeEdgeElements(Edge new_edge, char* string, int i){
+  switch (i){
+  case 0:
+    new_edge->bus_line = malloc(strlen(buffer) + 1);
+    strcpy(new_edge->bus_line, removeSpace(string));
+    break;
   case 1:
-    atoi(getSpecificInfo(string, str));
-    new_edge->bus_line = atoi(str);
+    new_edge->travel_from = malloc(sizeof(struct node));
+    new_edge->travel_from->name = malloc(strlen(buffer) + 1);
+    strcpy(new_edge->travel_from->name, removeSpace(string));
     break;
   case 2:
-    getSpecificInfo(string, str);  
-    new_edge->travel_from = str;
+    new_edge->travel_to = malloc(sizeof(struct node));
+    new_edge->travel_to->name = malloc(strlen(buffer) + 1);
+    strcpy(new_edge->travel_to->name, removeSpace(string));
     break;
-  case 3:
-    getSpecificInfo(string, str);   
-    new_edge->travel_to = str;
+  case 3: 
+    new_edge->travel_time = malloc(strlen(buffer) + 1);
+    strcpy(new_edge->travel_time, removeSpace(string));
     break;
-  case 4:
-    atoi(getSpecificInfo(string, str));   
-    new_edge->travel_time = atoi(str);
-    break;  
-  default:
-    puts("FUck you");
-  } 
+  }
   return new_edge;
 }
+
+
+Edge newEdge(char* string, Edge new_edge){
+  char delim[2] = ",";
+  for (int i = 0 ; i < 4; ++i) {
+    makeEdgeElements(new_edge, string, i);
+    string = strtok(NULL, delim);
+  }
+  return new_edge;
+}
+
 
 
 char* getInfo(char* filename){
@@ -116,20 +87,13 @@ char* getInfo(char* filename){
   return string;
 }
 
-Edge makeEdge (char* filename){
-  Edge new_edge = NULL;
+Edge makeEdge (char* filename, Edge new_edge){
   char delim[2] = ","; 
   char* string = getInfo(filename);
   char* split_string = strtok(string, delim);
-  while (split_string != NULL){
-    makeElementEdge(split_string, 1);
-    makeElementEdge(split_string, 2);
-    makeElementEdge(split_string, 3);
-    makeElementEdge(split_string, 4);
- }
-  printf("%d\t%s\t%s\t%d\n", new_edge->bus_line, new_edge->travel_from, new_edge->travel_to, new_edge->travel_time);
-  return new_edge;
+  return newEdge(split_string, new_edge);
 }
+
 
 /*
 
@@ -148,67 +112,12 @@ int welcomeScreen(void){
 
 int main(int argc, char* argv[]){
   char* test = argv[1];
-  makeEdge(test);
-
-
-  return 0;
-}
-
-
-
-
-
-
-
-
-/*
-Edge makeEdge (char* string) {
-  char delim[2] = ","; 
-  char* split_string;
-  split_string = strtok(string, delim);
-  while (split_string != NULL){
-    if (split_string[0] == 32) {
-      split_string = split_string + 1;
-      split_string = strtok(NULL, delim);
-    }else{    
-      split_string = strtok(NULL, delim); 
-    } 
-  }
-  return split_string;
-}
-
-
-
-void getInfo(char* filename){
-  // Node new_node = NULL;
-  FILE* database = fopen(filename, "r");
-  char* string = fgets(buffer, 128, database);
-  partitionLine(string);
-  char* a_piece_of_info = NULL;
-  while (strchr(string, atoi("\n")) != NULL){
-    for (int i = 0; string[i] != atoi("\n"); i++) {
-      strcpy(a_piece_of_info, string);
-    }
-  }
-  printf("%s/n", string);
-}
-
-
-
-
-Edge makeEdge() {
-  
-}
-void makeGraph(char* filename) {
-  FILE* database = fopen(filename, "r");
-  Node new_node = malloc(sizeof(struct node));
   Edge new_edge = malloc(sizeof(struct edge));
+  makeEdge(test, new_edge);
+  printf("%s\t%s\t%s\t%s\n", new_edge->bus_line, new_edge->travel_from->name, new_edge->travel_to->name, new_edge->travel_time);
+
+  return 1;
 }
-
-*/
-
-
-
 
 
 // Varje strängrad innehåller:
