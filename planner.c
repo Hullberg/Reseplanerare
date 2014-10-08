@@ -15,50 +15,38 @@ typedef struct edge {
   struct node* travel_from;   
   struct node* travel_to;     
   char* travel_time;          
-  struct edge* next_node;
 } *Edge;
 
 typedef struct node {
   char* name;
-  char* bus_line;
   struct edge* route;
-  struct node* next;
+  struct node* next_node;
 } *Node;
 
 
+
+
 char* removeSpace(char* string){
-   if(string[0] == 32){
-     string = string + 1;
+  while(string[0] == 32){
+    string = string + 1;
   }
-   return string;
+  return string;
 }
 
-// Eftersom vi kör makeEdgeElements 4 ggr så mallocar vi 24 saker... Frigör efter varje gång?
 Edge makeEdgeElements(Edge new_edge, char* string, int i){
+  char* dick = removeSpace(string);
   switch (i){
   case 0:
-    new_edge->bus_line = malloc(strlen(buffer) + 1);
-    strcpy(new_edge->bus_line, removeSpace(string));
-    free(new_edge->bus_line); //Freeee falling
+    strcpy(new_edge->bus_line, dick);
     break;
-  case 1:
-    new_edge->travel_from = malloc(sizeof(struct node));
-    new_edge->travel_from->name = malloc(strlen(buffer) + 1);
-    strcpy(new_edge->travel_from->name, removeSpace(string));
-    free(new_edge->travel_from); // Frigör, men hjälper inte
-    free(new_edge->travel_from->name);
+  case 1:  
+    strcpy(new_edge->travel_from->name, dick);
     break;
-  case 2:
-    new_edge->travel_to = malloc(sizeof(struct node));
-    new_edge->travel_to->name = malloc(strlen(buffer) + 1);
-    strcpy(new_edge->travel_to->name, removeSpace(string));
-    free(new_edge->travel_to); // Det fungerar inte Axel
-    free(new_edge->travel_to->name);
+  case 2:  
+    strcpy(new_edge->travel_to->name, dick);
     break;
-  case 3: 
-    new_edge->travel_time = malloc(strlen(buffer) + 1);
-    strcpy(new_edge->travel_time, removeSpace(string));
-    free(new_edge->travel_time); // Tycker inte om det här!
+  case 3:  
+    strcpy(new_edge->travel_time, dick);
     break;
   }
   return new_edge;
@@ -90,26 +78,40 @@ Edge makeEdge (char* filename, Edge new_edge){
 }
 
 
-/*
 
 int welcomeScreen(void){
-  puts("\n Welcome to travelplanner!");
+  puts("\n\tWelcome to Travel Planner!");
   puts("       ____________");
   puts("      // PARTYBUS \\\\ ");
   puts("    ___________________     \\|/");
   puts("o  | [__] | [__]  [  ] |   (^^)");
   puts(" o |              [__] |   /||\\");
   puts("  o|___()_______()_____|    /\\");
-  puts(" Loading timetables\n");
+  puts("");
+  puts("\tLoading timetables...\n");
   return 0;
 }
-*/
+
+
+
+Edge allocate(void){
+  Edge new_edge = malloc(sizeof(struct edge));
+  new_edge->bus_line = malloc(strlen(buffer)+1);
+  new_edge->travel_from = malloc(sizeof(struct node));
+  new_edge->travel_from->name = malloc(strlen(buffer)+9); //behöver vara +9 här, vet ej varför
+  new_edge->travel_to = malloc(sizeof(struct node));
+  new_edge->travel_to->name =malloc(strlen(buffer)+9); //samma som ovan
+  new_edge->travel_time = malloc(strlen(buffer)+1);
+  return new_edge;
+}
 
 int main(int argc, char* argv[]){
+  welcomeScreen();
+  puts("\nLine:\tFrom:\t\t\tTo:\t\t\tTravel time:\n");
   char* test = argv[1];
-  Edge new_edge = malloc(sizeof(struct edge));
+  Edge new_edge = allocate();
   makeEdge(test, new_edge);
-  printf("%s\t%s\t%s\t%s\n", new_edge->bus_line, new_edge->travel_from->name, new_edge->travel_to->name, new_edge->travel_time);
+  printf("%s\t%s\t%s\t%s\n", new_edge->bus_line, (new_edge)->travel_from->name, (new_edge)->travel_to->name, (new_edge)->travel_time);
 
   return 1;
 }
