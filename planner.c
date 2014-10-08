@@ -25,6 +25,66 @@ typedef struct node {
 
 
 
+// createNode
+// Error if already exists, otherwise append to top of list
+// Uses arguments (previous_bus_stops, new_bus_stop)
+// Does *NOT* work, need to replace x with the list of busstops...
+// Not sure what to return from the function either. A list of all busstops and their buslines?
+
+
+
+
+/*     FUCK YOUR FUNCTION NIGGA
+
+Edge createNode(Node* x, Node* new_Node){
+  int found = 0;
+  while (x != NULL){
+    if (strcmp(x->name, new_Node->name) == 0){
+      puts("That node already exists in the planner.");
+      found = 1;
+    }
+    else{
+      x = x->next_node;
+    }
+  }
+  if (!found){
+    puts("Node is unique");
+    Node newNode = malloc(sizeof(struct node));
+    strcpy(new_Node, newNode);
+    new_Node->next_node = x;
+    x = newNode;
+    return x;
+  }
+  else{
+    return x;
+  }
+  return x;
+}
+
+
+*/
+
+
+
+
+// connectNodes
+// Takes two stops and creates an edge between them, with busline and time
+/*int createEdge(Node* stop1, Node* stop2){
+  
+  return 0;
+}
+*/
+
+// removeNode
+// Removes a busstop from the list
+
+//removeEdge
+// Removes the edge between two stops
+
+// shortestPath
+// The shortest way between two stops
+
+
 
 char* removeSpace(char* string){
   while(string[0] == 32){
@@ -104,6 +164,11 @@ Edge allocate(void){
   new_edge->travel_time = malloc(strlen(buffer)+1);
   return new_edge;
 }
+
+// argv will have 3 arguments:
+// 1. the programme itself
+// 2. A file containing nodes (Busline, stop, starting times)
+// 3. A file containing edges (Busline, stop1, stop2, time taken to travel between)
 
 int main(int argc, char* argv[]){
   welcomeScreen();
