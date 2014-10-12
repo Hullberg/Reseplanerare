@@ -4,24 +4,174 @@
 
 #include "readline.h"
 
-struct edge;
 struct node;
 
 char buffer[128];
 
-
+// ÄNDRAT STRUKTEN
 typedef struct edge {
   char* bus_line;             
-  struct node* travel_from;   
-  struct node* travel_to;     
-  char* travel_time;          
+  char* travel_from;   
+  char* travel_to;     
+  char* travel_time;
+  struct edge* next;
 } *Edge;
 
 typedef struct node {
+  char* bus_line;
   char* name;
-  struct edge* route;
-  struct node* next_node;
+  char* start_time; 
+  struct node* next;
 } *Node;
+
+
+
+char* removeSpace(char* string){
+  while(string[0] == 32){
+    string = string + 1;
+  }
+  return string;
+}
+
+char* getInfo(FILE* database){
+  //FILE* database = fopen(filename, "r");
+  char* string = fgets(buffer, 128, database);
+  return string;
+}
+
+
+//EDGE
+
+/*
+Edge makeEdgeElements(Edge new_edge, char* string, int i){
+  char* value_for_insertion = removeSpace(string);
+  switch (i){
+  case 0:
+    strcpy(new_edge->bus_line, value_for_insertion);
+    break;
+  case 1:  
+    strcpy(new_edge->travel_from->name, value_for_insertion);
+    break;
+  case 2:  
+    strcpy(new_edge->travel_to->name, value_for_insertion);
+    break;
+  case 3:  
+    strcpy(new_edge->travel_time, value_for_insertion);
+    break;
+  }
+  return new_edge;
+}
+
+
+Edge newEdge(char* string, Edge new_edge){
+  for (int i = 0 ; i < 4; ++i) {
+    makeEdgeElements(new_edge, string, i);
+    string = strtok(NULL, ",");
+  }
+  return new_edge;
+}
+
+Edge makeEdge (FILE* filename, Edge new_edge){ 
+  char* string = getInfo(filename);
+  char* split_string = strtok(string, ",");
+  return newEdge(split_string, new_edge);
+}
+*/
+
+//NODE
+
+Node makeNodeElements(Node new_node, char* string, int i) {
+  char* value_for_insertion = removeSpace(string);
+  switch (i){
+  case 0:
+    strcpy(new_node->name, value_for_insertion);
+    break;
+  case 1:  
+    strcpy(new_node->route->bus_line, value_for_insertion);
+    break;
+  case 2:  
+    strcpy(new_node->start_time, value_for_insertion);
+    break;
+  }
+  return new_node;
+}
+
+Node newNode(char* string, Node new_node){
+  for (int i = 0; i < 3; ++i) {
+    makeNodeElements(new_node, string, i);
+    string = strtok(NULL, ",");
+  }
+  return new_node;
+}
+
+Node makeNode(FILE* database, Node new_node){
+  char* string = getInfo (database);
+  char* split_string = strtok(string, ",");
+  return newNode(split_string, new_node);
+}
+
+//MEMORY ALLOCATION
+/*
+Edge allocateEdge(void){
+  Edge new_edge = malloc(sizeof(struct edge));
+  new_edge->bus_line = malloc(strlen(buffer)+1);
+  new_edge->travel_from = malloc(sizeof(struct node));
+  new_edge->travel_from->name = malloc(strlen(buffer)+1); 
+  new_edge->travel_to = malloc(sizeof(struct node));
+  new_edge->travel_to->name =malloc(strlen(buffer)+1); 
+  new_edge->travel_time = malloc(strlen(buffer)+1);
+  
+  return new_edge;
+}
+*/
+
+Node allocateNode (void) {
+  Node new_node = malloc(sizeof(struct node)); 
+  new_node->name = malloc(strlen(buffer)+1);
+  new_node->route = malloc(sizeof(struct edge));
+  new_node->route->bus_line = malloc(strlen(buffer)+1); 
+  new_node->next = malloc(sizeof(struct node));
+  new_node->next->name = malloc(strlen(buffer)+1); 
+  new_node->start_time = malloc(strlen(buffer)+1);
+  return new_node;
+}
+
+//HYBRIS
+
+
+Node makeAllNodes(char* filename) {
+  FILE* database = fopen(filename, "r");
+  Node node_list = NULL;
+  while (!(feof(database))){
+    Node new_node = allocateNode();
+    makeNode(database, new_node);
+    new_node->next = node_list;
+    node_list = new_node;
+  }
+  return node_list;
+}
+
+
+/*
+
+void makeGraph() {         
+  
+}
+*/
+
+
+int main(int argc, char* argv[]){
+  //welcomeScreen();
+  //char* edgefile = argv[1];
+  char* nodefile = argv[1];
+  //Edge new_edge = allocateEdge();
+  makeAllNodes(nodefile);
+  //makeEdge(edgefile, new_edge);
+
+  return 1;
+}
+
+
 
 
 
@@ -31,7 +181,10 @@ typedef struct node {
 // Does *NOT* work, need to replace x with the list of busstops...
 // Not sure what to return from the function either. A list of all busstops and their buslines?
 
+
 /*FUCK YOUR FUNCTION NIGGA
+
+/*     FUCK YOUR FUNCTION NIGGA
 
 Edge createNode(Node* x, Node* new_Node){
   int found = 0;
@@ -58,6 +211,8 @@ Edge createNode(Node* x, Node* new_Node){
   return x;
 }
 */
+
+
 
 
 // connectNodes
@@ -100,60 +255,7 @@ int removeNode(x, Node* stop){
 // Use Dijsktras algorithm, need <limits.h>
 
 
-
-char* removeSpace(char* string){
-  while(string[0] == 32){
-    string = string + 1;
-  }
-  return string;
-}
-
-Edge makeEdgeElements(Edge new_edge, char* string, int i){
-  char* dick = removeSpace(string);
-  switch (i){
-  case 0:
-    strcpy(new_edge->bus_line, dick);
-    break;
-  case 1:  
-    strcpy(new_edge->travel_from->name, dick);
-    break;
-  case 2:  
-    strcpy(new_edge->travel_to->name, dick);
-    break;
-  case 3:  
-    strcpy(new_edge->travel_time, dick);
-    break;
-  }
-  return new_edge;
-}
-
-
-Edge newEdge(char* string, Edge new_edge){
-  char delim[2] = ",";
-  for (int i = 0 ; i < 4; ++i) {
-    makeEdgeElements(new_edge, string, i);
-    string = strtok(NULL, delim);
-  }
-  return new_edge;
-}
-
-
-
-char* getInfo(char* filename){
-  FILE* database = fopen(filename, "r");
-  char* string = fgets(buffer, 128, database);
-  return string;
-}
-
-Edge makeEdge (char* filename, Edge new_edge){
-  char delim[2] = ","; 
-  char* string = getInfo(filename);
-  char* split_string = strtok(string, delim);
-  return newEdge(split_string, new_edge);
-}
-
-
-
+/*
 int welcomeScreen(void){
   puts("\n\tWelcome to Travel Planner!");
   puts("         ____________");
@@ -169,6 +271,7 @@ int welcomeScreen(void){
 
 
 
+
 Edge allocate(void){
   Edge new_edge = malloc(sizeof(struct edge));
   new_edge->bus_line = malloc(strlen(buffer)+1);
@@ -180,10 +283,14 @@ Edge allocate(void){
   return new_edge;
 }
 
+*/
+
+
 // argv will have 3 arguments:
 // 1. the programme itself
 // 2. A file containing nodes (Busline, stop, starting times)
 // 3. A file containing edges (Busline, stop1, stop2, time taken to travel between)
+
 
 int main(int argc, char* argv[]){
   welcomeScreen();
@@ -195,6 +302,7 @@ int main(int argc, char* argv[]){
 
   return 0;
 }
+
 
 
 // Varje strängrad innehåller:
