@@ -31,10 +31,7 @@ typedef struct node {
 // Does *NOT* work, need to replace x with the list of busstops...
 // Not sure what to return from the function either. A list of all busstops and their buslines?
 
-
-
-
-/*     FUCK YOUR FUNCTION NIGGA
+/*FUCK YOUR FUNCTION NIGGA
 
 Edge createNode(Node* x, Node* new_Node){
   int found = 0;
@@ -60,29 +57,47 @@ Edge createNode(Node* x, Node* new_Node){
   }
   return x;
 }
-
-
 */
-
-
 
 
 // connectNodes
 // Takes two stops and creates an edge between them, with busline and time
-/*int createEdge(Node* stop1, Node* stop2){
+// Point to same route, and stop1 points next_node to stop2
+// Need to know the starting times of both busses, so we can calculate the time between them
+// include <time.h>
+/*
+int createEdge(Node* stop1, Node* stop2){
   
+  int time1 = atoi(stop1->travel_time)
+  int time2 = atoi(stop2->travel_time)
+  diff = time2 - time1
+
+  // using time.h making stop1->travel_time & stop2->travel_time to format time_t
+  // results in a value with format double 
+  double difftime(stop1->travel_time, stop2->travel_time)
+ 
   return 0;
-}
+  }
 */
 
+
 // removeNode
-// Removes a busstop from the list
+// Removes a busstop from x
+/*
+int removeNode(x, Node* stop){
+// needs to find the stop in question, and the two adjacent stops.
+// remove the requested stop, and connect the other two.
+}
+ */
+
 
 //removeEdge
 // Removes the edge between two stops
 
+
 // shortestPath
 // The shortest way between two stops
+// Use Dijsktras algorithm, need <limits.h>
 
 
 
@@ -141,12 +156,12 @@ Edge makeEdge (char* filename, Edge new_edge){
 
 int welcomeScreen(void){
   puts("\n\tWelcome to Travel Planner!");
-  puts("       ____________");
-  puts("      // PARTYBUS \\\\ ");
-  puts("    ___________________     \\|/");
-  puts("o  | [__] | [__]  [  ] |   (^^)");
-  puts(" o |              [__] |   /||\\");
-  puts("  o|___()_______()_____|    /\\");
+  puts("         ____________");
+  puts("        // PARTYBUS \\\\ ");
+  puts("      ___________________     \\|/");
+  puts("o    | [__] | [__]  [  ] |   (^^)");
+  puts("  o  |              [__] |   /||\\");
+  puts("    o|___()_______()_____|    /\\");
   puts("");
   puts("\tLoading timetables...\n");
   return 0;
@@ -158,9 +173,9 @@ Edge allocate(void){
   Edge new_edge = malloc(sizeof(struct edge));
   new_edge->bus_line = malloc(strlen(buffer)+1);
   new_edge->travel_from = malloc(sizeof(struct node));
-  new_edge->travel_from->name = malloc(strlen(buffer)+9); //behöver vara +9 här, vet ej varför
+  new_edge->travel_from->name = malloc(strlen(buffer)+1); 
   new_edge->travel_to = malloc(sizeof(struct node));
-  new_edge->travel_to->name =malloc(strlen(buffer)+9); //samma som ovan
+  new_edge->travel_to->name = malloc(strlen(buffer)+1);
   new_edge->travel_time = malloc(strlen(buffer)+1);
   return new_edge;
 }
@@ -178,7 +193,7 @@ int main(int argc, char* argv[]){
   makeEdge(test, new_edge);
   printf("%s\t%s\t%s\t%s\n", new_edge->bus_line, (new_edge)->travel_from->name, (new_edge)->travel_to->name, (new_edge)->travel_time);
 
-  return 1;
+  return 0;
 }
 
 
@@ -193,34 +208,41 @@ int main(int argc, char* argv[]){
 
 
 
-// Olika saker vi kan gära, med säkningar osv
+// Olika saker vi kan gära, med sökningar osv
 /*
-int mainloop(char *argv){
+  int mainloop(char *argv){
 
 
   int choice = -1;
   while(choice != 0){
-    puts("Please choose an operation");
-    puts("1. Enter starting destination"); // Vart man börjar, sedan följdfråga om tid
-    puts("2. Enter final destination"); // Vart man vill sluta, och senast nÃ¤r (typ)
-    puts("0. Exit the programme.");
-    printf("? ");
-    scanf("%d", &choice);
-    while(getchar() != '\n'); // Clear stdin
-    switch(choice){
-    case 1:
-      starter(argv);
-      break;
-    case 2:
-      final(argv);
-      break;
-    case 0:
-      puts("The partybus has stopped.");
-      break;
-    default:
-      puts("Invalid operation, please try again.\n");
-    }
+  puts("Please choose an operation");
+  puts("1. Enter starting destination"); // Vart man börjar, sedan följdfråga om tid
+  puts("2. Enter final destination"); // Vart man vill sluta, och senast nÃ¤r (typ)
+  puts("0. Exit the programme.");
+  printf("? ");
+  scanf("%d", &choice);
+  while(getchar() != '\n'); // Clear stdin
+  switch(choice){
+  case 1:
+  starter(argv);
+  break;
+  case 2:
+  final(argv);
+  break;
+  case 0:
+  puts("You missed the bus, but the bus certainly did not miss you.");
+  puts("                 ____________");
+  puts("                // PARTYBUS \\\\ ");
+  puts("              ___________________ ");
+  puts("        o    | [__] | [__]  [  ] |");
+  puts(" \\|/      o  |              [__] |");
+  puts("(x.x)       o|___()_______()_____|");
+  puts("");
+  break;
+  default:
+  puts("Invalid operation, please try again.\n");
   }
-}
-*/
+  }
+  }*/
+
 
